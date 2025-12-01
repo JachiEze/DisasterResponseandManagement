@@ -36,8 +36,8 @@ export default function ReportDisaster() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10">
-      <div className="max-w-md mx-auto px-6">
+    <div className="min-h-screen bg-gray-50 py-16">
+      <div className="max-w-2xl mx-auto px-8">
         <div className="mb-8">
           <button
             onClick={() => navigate("/reporter-menu")}
