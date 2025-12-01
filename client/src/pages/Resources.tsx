@@ -15,8 +15,7 @@ export default function Resources() {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [quantity, setQuantity] = useState<number>(0);
-  const [searchTerm, setSearchTerm] = useState(""); // NEW
-
+  const [searchTerm, setSearchTerm] = useState("");
   const token = localStorage.getItem("token");
 
   async function fetchResources() {
@@ -77,124 +76,117 @@ export default function Resources() {
     }
   }
 
-  
   const filteredResources = resources.filter((r) =>
     r.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="min-h-screen bg-blue-100 flex flex-col items-center p-6 relative">
-  
-      <div className="w-full flex justify-between items-center mb-4">
-        <button
-          onClick={() => navigate("/admin-menu")}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Go Back
-        </button>
-
-        
-        <input
-          type="text"
-          placeholder="Search by name..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border p-2 rounded w-64"
-        />
-      </div>
-
-      <h1 className="text-2xl font-bold text-center mb-4">Resources</h1>
-
-    
-      <div className="mb-6 flex space-x-4">
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="border p-2 rounded"
-        />
-        <input
-          type="number"
-          placeholder="Quantity"
-          value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
-          className="border p-2 rounded w-24"
-        />
-        <input
-          type="text"
-          placeholder="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          className="border p-2 rounded"
-        />
-
-        <button
-          onClick={addResource}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Save
-        </button>
-      </div>
-
-    
-      <ul className="space-y-4 w-full max-w-md">
-        {filteredResources.map((r) => (
-          <li
-            key={r._id}
-            className="flex items-center justify-between bg-white p-4 rounded shadow"
+    <div className="min-h-screen bg-gray-50 py-10">
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="flex justify-between items-center mb-8">
+          <button
+            onClick={() => navigate("/admin-menu")}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg shadow transition"
           >
-            <span className="font-semibold">
-              {r.name} — {r.quantity} — {r.location}
-            </span>
+            ← Back to Menu
+          </button>
 
-            <div className="flex space-x-2">
-              <button
-                onClick={() => {
-                  const input = prompt(
-                    `Set new quantity for ${r.name}:`,
-                    r.quantity.toString()
-                  );
-                  if (input !== null) {
-                    const newQty = Number(input);
-                    if (!Number.isNaN(newQty)) {
-                      updateResource(r._id, { quantity: newQty });
+          <input
+            type="text"
+            placeholder="Search resources..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border border-gray-300 rounded-lg px-4 py-2 w-72 focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">
+          Manage Resources
+        </h1>
+
+        <div className="bg-white p-6 rounded-2xl shadow-md mb-8 flex flex-wrap gap-4">
+          <input
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="border border-gray-300 rounded-lg px-4 py-2 flex-1"
+          />
+          <input
+            type="number"
+            placeholder="Quantity"
+            value={quantity}
+            onChange={(e) => setQuantity(Number(e.target.value))}
+            className="border border-gray-300 rounded-lg px-4 py-2 w-28"
+          />
+          <input
+            type="text"
+            placeholder="Location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            className="border border-gray-300 rounded-lg px-4 py-2 flex-1"
+          />
+          <button
+            onClick={addResource}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg shadow transition"
+          >
+            Add
+          </button>
+        </div>
+
+        <ul className="space-y-4">
+          {filteredResources.map((r) => (
+            <li
+              key={r._id}
+              className="flex justify-between items-center bg-white p-5 rounded-2xl shadow-md hover:shadow-lg transition"
+            >
+              <div className="font-semibold text-gray-900">
+                {r.name} — {r.quantity} — {r.location}
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    const input = prompt(
+                      `Set new quantity for ${r.name}:`,
+                      r.quantity.toString()
+                    );
+                    if (input && !Number.isNaN(Number(input))) {
+                      updateResource(r._id, { quantity: Number(input) });
                     }
-                  }
-                }}
-                className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-              >
-                Edit Qty
-              </button>
-
-              <button
-                onClick={() => {
-                  const input = prompt(
-                    `Set new location for ${r.name}:`,
-                    r.location
-                  );
-                  if (input !== null && input.trim() !== "") {
-                    updateResource(r._id, { location: input.trim() });
-                  }
-                }}
-                className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
-              >
-                Edit Location
-              </button>
-
-              <button
-                onClick={() => deleteResource(r._id)}
-                className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-              >
-                Delete
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+                  }}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-lg transition"
+                >
+                  Edit Qty
+                </button>
+                <button
+                  onClick={() => {
+                    const input = prompt(
+                      `Set new location for ${r.name}:`,
+                      r.location
+                    );
+                    if (input && input.trim()) {
+                      updateResource(r._id, { location: input.trim() });
+                    }
+                  }}
+                  className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg transition"
+                >
+                  Edit Loc
+                </button>
+                <button
+                  onClick={() => deleteResource(r._id)}
+                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition"
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
+
 
 
 

@@ -36,49 +36,56 @@ export default function ReportDisaster() {
   };
 
   return (
-    <div className="relative min-h-screen bg-blue-100 flex items-center justify-center">
-      {/* absolutely positioned top-left button */}
-      <button
-        onClick={() => navigate("/reporter-menu")}
-        className="absolute top-4 left-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Go Back
-      </button>
+    <div className="min-h-screen bg-gray-50 py-10">
+      <div className="max-w-md mx-auto px-6">
+        <div className="mb-8">
+          <button
+            onClick={() => navigate("/reporter-menu")}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg shadow transition"
+          >
+            ← Back to Menu
+          </button>
+        </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded shadow-md w-full max-w-md space-y-4"
-      >
-        <h1 className="text-2xl font-bold text-center">Report a Disaster</h1>
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">
+          Report a Disaster
+        </h1>
 
-        <input
-          className="w-full border p-2 rounded"
-          placeholder="Address"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-        />
-        <textarea
-          className="w-full border p-2 rounded"
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <input
-          type="file"
-          accept="image/*"
-          capture="environment"
-          onChange={(e) => setImage(e.target.files?.[0] || null)}
-        />
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-red-500 text-white w-full py-2 rounded hover:bg-red-600"
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-6 rounded-2xl shadow-md space-y-4"
         >
-          {loading ? "Sending..." : "Send"}
-        </button>
-      </form>
+          <input
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500"
+            placeholder="Address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
+          <textarea
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500"
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            capture="environment"
+            onChange={(e) => setImage(e.target.files?.[0] || null)}
+            className="block w-full text-gray-700"
+          />
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white w-full py-2 rounded-lg shadow transition"
+          >
+            {loading ? "Sending..." : "Send"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
+
 

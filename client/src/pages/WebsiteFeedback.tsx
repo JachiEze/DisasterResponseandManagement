@@ -15,32 +15,48 @@ export default function WebsiteFeedback() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/feedback")
-      .then(res => setFeedbacks(res.data))
+    axios
+      .get("http://localhost:5000/api/feedback")
+      .then((res) => setFeedbacks(res.data))
       .catch(console.error);
   }, []);
 
   return (
-    <div className="min-h-screen bg-blue-100 p-6">
-            <button
-        onClick={() => navigate("/admin-menu")}
-        className="mb-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Go Back
-      </button>
-      <h1 className="text-2xl font-bold mb-4 text-center">Website Feedback</h1>
-      <div className="max-w-2xl mx-auto space-y-4">
-        {feedbacks.map(f => (
-          <div key={f._id} className="bg-white p-4 rounded shadow">
-            <p className="font-semibold">{f.name} ({f.email})</p>
-            <p className="mt-1 text-gray-700">{f.message}</p>
-            <p className="text-xs text-gray-500 mt-1">
-              {new Date(f.createdAt).toLocaleString()}
-            </p>
-          </div>
-        ))}
+    <div className="min-h-screen bg-gray-50 py-10">
+      <div className="max-w-4xl mx-auto px-6">
+        <button
+          onClick={() => navigate("/admin-menu")}
+          className="mb-8 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg shadow transition"
+        >
+          ← Back to Menu
+        </button>
+
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
+          Website Feedback
+        </h1>
+
+        <div className="space-y-5">
+          {feedbacks.map((f) => (
+            <div
+              key={f._id}
+              className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition"
+            >
+              <p className="font-semibold text-gray-900">
+                {f.name} <span className="text-gray-500">({f.email})</span>
+              </p>
+              <p className="mt-2 text-gray-700">{f.message}</p>
+              <p className="mt-2 text-sm text-gray-500">
+                {new Date(f.createdAt).toLocaleString([], {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
+
 

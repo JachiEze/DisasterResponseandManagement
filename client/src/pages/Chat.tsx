@@ -26,8 +26,8 @@ export default function Chat() {
   const stored = localStorage.getItem("user");
   const parsed = stored ? JSON.parse(stored) : {};
   const role: string | null = parsed.role || null;
-  
-    const menuPaths: Record<string, string> = {
+
+  const menuPaths: Record<string, string> = {
     admin: "/admin-menu",
     dispatcher: "/dispatcher-menu",
     responder: "/responder-menu",
@@ -44,15 +44,12 @@ export default function Chat() {
     const decoded = jwtDecode<JWTPayload>(token);
     setCurrentUser(decoded);
 
-    const socket = io("http://localhost:5000", {
-      auth: { token }
+    const socket = io( import.meta.env.VITE_SOCKET_URL || "http://localhost:5000", {
+      auth: { token },
     });
     socketRef.current = socket;
 
-    socket.on("chat history", (history: Message[]) => {
-      setMessages(history);
-    });
-
+    socket.on("chat history", (history: Message[]) => setMessages(history));
     socket.on("chat message", (m: Message) =>
       setMessages((prev) => [...prev, m])
     );
@@ -70,35 +67,37 @@ export default function Chat() {
     s.emit("chat message", {
       text: input.trim(),
       username: currentUser.username,
-      role: currentUser.role
+      role: currentUser.role,
     });
     setInput("");
   };
 
-
   return (
-    <div className="min-h-screen flex flex-col items-center p-4 bg-blue-100">
-      <div className="w-full max-w-2xl">
-        <div className="flex justify-between items-center mb-2">
-          
-      <button
-        onClick={() => navigate(role ? menuPaths[role] : "/login")}
-        className="mb-4 ml-4 mt-4 self-start px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Go Back
-      </button>
-      <h1 className="text-2xl font-bold text-center">Group Chat</h1>
+    <div className="min-h-screen flex flex-col items-center bg-gray-50 py-10">
+      <div className="w-full max-w-3xl px-6">
+        <div className="flex justify-between items-center mb-6">
+          <button
+            onClick={() => navigate(role ? menuPaths[role] : "/login")}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg shadow transition"
+          >
+            ← Back to Menu
+          </button>
+          <h1 className="text-3xl font-bold text-gray-800">Group Chat</h1>
         </div>
 
-        <div className="h-96 overflow-y-auto bg-white p-3 rounded shadow">
+        <div className="h-96 overflow-y-auto bg-white p-4 rounded-2xl shadow-md mb-4">
           {messages.map((m, i) => (
             <div key={i} className="mb-2">
               {m.system ? (
-                <div className="text-center text-sm text-gray-500">{m.text}</div>
+                <div className="text-center text-sm text-gray-500">
+                  {m.text}
+                </div>
               ) : (
                 <div>
-                  <strong>{m.username}</strong>
-                  {m.role && <span className="text-gray-500"> ({m.role})</span>}
+                  <strong className="text-gray-900">{m.username}</strong>
+                  {m.role && (
+                    <span className="text-gray-500"> ({m.role})</span>
+                  )}
                   : <span>{m.text}</span>
                 </div>
               )}
@@ -106,19 +105,22 @@ export default function Chat() {
           ))}
         </div>
 
-        <form onSubmit={send} className="flex mt-3">
+        <form onSubmit={send} className="flex">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="flex-1 p-2 border rounded-l"
-            placeholder="Type message..."
+            className="flex-1 border border-gray-300 rounded-l-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500"
+            placeholder="Type a message..."
           />
-          <button className="p-2 bg-blue-500 text-white rounded-r">Send</button>
+          <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-r-lg shadow transition">
+            Send
+          </button>
         </form>
       </div>
     </div>
   );
 }
+
 
 
 

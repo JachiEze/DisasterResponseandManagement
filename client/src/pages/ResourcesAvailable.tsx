@@ -11,7 +11,7 @@ interface Resource {
 
 export default function ResourcesAvailable() {
   const [resources, setResources] = useState<Resource[]>([]);
-  const [searchTerm, setSearchTerm] = useState(""); 
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const stored = localStorage.getItem("user");
@@ -29,54 +29,51 @@ export default function ResourcesAvailable() {
       .catch((err) => console.error("Failed to fetch resources:", err));
   }, []);
 
-  
   const filteredResources = resources.filter((r) =>
     r.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="min-h-screen bg-blue-100 p-6">
-    
-      <div className="w-full flex justify-between items-center mb-4">
-        <button
-          onClick={() => navigate(role ? menuPaths[role] : "/login")}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Go Back
-        </button>
-
-        
-        <input
-          type="text"
-          placeholder="Search by name..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border p-2 rounded w-64"
-        />
-      </div>
-
-      <h1 className="text-2xl font-bold text-center mb-4">
-        Available Resources
-      </h1>
-
-      <ul className="space-y-3 max-w-md mx-auto">
-        {filteredResources.map((r) => (
-          <li
-            key={r._id}
-            className="bg-white p-4 rounded shadow flex justify-between"
+    <div className="min-h-screen bg-gray-50 py-10">
+      <div className="max-w-4xl mx-auto px-6">
+        <div className="flex justify-between items-center mb-6">
+          <button
+            onClick={() => navigate(role ? menuPaths[role] : "/login")}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg shadow transition"
           >
-            <div className="flex flex-col">
-              <span className="font-semibold">{r.name}</span>
-              <span className="text-gray-600 text-sm">
-                Location: {r.location}
-              </span>
-            </div>
-            <span className="text-gray-700 font-medium">{r.quantity}</span>
-          </li>
-        ))}
-      </ul>
+            ← Back
+          </button>
+          <input
+            type="text"
+            placeholder="Search resources..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border border-gray-300 rounded-lg px-4 py-2 w-72 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
+          Available Resources
+        </h1>
+
+        <ul className="space-y-4">
+          {filteredResources.map((r) => (
+            <li
+              key={r._id}
+              className="flex justify-between bg-white p-5 rounded-2xl shadow-md hover:shadow-lg transition"
+            >
+              <div>
+                <p className="font-semibold text-gray-900">{r.name}</p>
+                <p className="text-gray-600 text-sm">Location: {r.location}</p>
+              </div>
+              <span className="text-indigo-700 font-bold">{r.quantity}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
+
 
 
